@@ -1,0 +1,15 @@
+{
+  "name": "3dthreejscuber",
+  "version": "1.0.0",
+  "description": "Create 3D animation Cube letter R",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rishat (weboson)",
+  "license": "ISC",
+  "dependencies": {
+    
+  }
+}
