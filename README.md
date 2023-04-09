@@ -33,8 +33,11 @@ Other Sources:
 Git Repo: https://github.com/Mixturka613/Lesson-ThreeJS
 
 
-Screenshot #1:
+Screenshot #1 (image):
 ![screenshotGoPro](https://user-images.githubusercontent.com/42917939/230699691-e2861c2d-84c3-43a8-8faf-7d03191cc40a.jpg)
 
+
+Screenshot #2 (3D hdr-vision):
+![screenshotCube](https://user-images.githubusercontent.com/42917939/230781575-96ddc671-eb0d-4254-87e1-f9d0a12b6fd8.jpg)
 
 

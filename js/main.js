@@ -6,51 +6,66 @@
         import { GLTFLoader } from 'GLTFLoader';
         import { RectAreaLightHelper } from 'RectAreaLightHelper'
         import { RectAreaLightUniformsLib } from 'RectAreaLightUniformsLib';
+        // для фоной сцены
+        import { RGBELoader } from 'RGBELoader';
 
-        function init() {
+        async function init() {
             let container = document.querySelector('.container');
 
             //Scene
-            const scene = new THREE.Scene()
+            const scene = new THREE.Scene();
+
+
+            //! фон - панарама hdr 
+            const rgbeLoader = new RGBELoader();
+            const envMap = await rgbeLoader.loadAsync( 'images/small_workshop_4k.hdr' );
+            envMap.mapping = THREE.EquirectangularReflectionMapping;
+
+            scene.background = envMap;
+            scene.environment = envMap;
+
             //! фон - изображение появляется, если отдалить модель (колёсиком мыши) -  в общем, нужно настраивать
-            const spaceTexture = new THREE.TextureLoader().load('./images/space.jpg');
-            scene.background = spaceTexture;
+            //const spaceTexture = new THREE.TextureLoader().load('./images/space.jpg');
+            //scene.background = spaceTexture;
+            //! фон - цвет
             // добавляет фон - просто цвет
-           //scene.background = new THREE.Color("#E2DFE1"); 
+            //scene.background = new THREE.Color("#E2DFE1"); 
 
-            //Camera                                         (первый аргумент это позиция камеры от объетка)
-            //      ----------------------------------------------------------------------------- - 4 - это моё - так фон-картинка не исчезает после обновления
-            const camera = new THREE.PerspectiveCamera(5, window.innerWidth / window.innerHeight - 4, 0.1, 10);
+            //Camera  (первый аргумент это позиция камеры отдоление от объетка - возможны искажения)
+            //      ----------------------------------------------------------------------------- + 2 (-4) - это моё - так фон-картинка не исчезает после обновления
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.5, 10);
             // позиция камеры (приближает камеру, камера вверх/низ, зад / перед )
-            camera.position.set(1, 0.5, 1); // последний аргумент - это масштаб
+            camera.position.set(4, 0.5, 1); // последний аргумент - это масштаб
 
-            //render
+            //! render
             const renderer = new THREE.WebGLRenderer({antialias: true})
-            renderer.setSize(window.innerWidth, window.innerHeight)
+            renderer.setSize(window.innerWidth, window.innerHeight );// размер окна
             container.appendChild(renderer.domElement)
 
-            let plain;
-            {
-                plain = new THREE.Mesh( // сетка
-                    new THREE.PlaneGeometry(1000, 1000),
-                    new THREE.MeshBasicMaterial({color: "#E2DFE1"})
-                )
-                plain.reciveShadow = true;
-                plain.position.set(0, -1, 0);
-                plain.rotateX(-Math.PI / 2);
-                // plain.scale.set(6, 4, 2);
-                //plain.scale.multiplyScalar(1); // Multiply Scalar;
-                plain.geometry.scale(2, 2, 2)
-                scene.add(plain)
-            }
+
+            //! тень (серый квадрат)
+            // let plain;
+            // {
+            //     plain = new THREE.Mesh( // сетка
+            //         new THREE.PlaneGeometry(1000, 1000),
+            //         new THREE.MeshBasicMaterial({color: "#E2DFE1"})
+            //     )
+            //     plain.reciveShadow = true;
+            //     plain.position.set(0, -1, 0);
+            //     plain.rotateX(-Math.PI / 2);
+            //     // plain.scale.set(6, 4, 2);
+            //     //plain.scale.multiplyScalar(1); // Multiply Scalar;
+            //     //plain.geometry.scale(2, 2, 2)
+            //     scene.add(plain)
+            // }
 
 
 
-            // 3D Model
+            //! 3D Model
             {
                 const loader = new GLTFLoader();
                 // loader.load('./model/Gopro_H5S_HQ.gltf', gltf => {
-                loader.load('./model/Gopro_H5S_HQ.gltf', gltf => {
+                loader.load('./model/scene.gltf', gltf => {
                 scene.add(gltf.scene);
                 }, 
                     function (error) {
@@ -60,6 +75,7 @@
             }
             
             {
+                //! свет 
                 const light = new THREE.DirectionalLight((226, 91, 91, 0.69), 100)
                 light.position.set(-2, 0, 10)
                 light.lookAt(0, -1, 0)
@@ -112,10 +128,10 @@
                 renderer.setSize(window.innerWidth, window.innerHeight)
             }
 
-            // Animate
+            //! Animate
             function animate() {
                 requestAnimationFrame(animate)
-                controls.update(); //! вращение объекта
+                //controls.update(); //! вращение объекта
                 renderer.render(scene, camera)
             }
             animate()
@@ -123,3 +139,5 @@
         }
 
         init()
+
+
